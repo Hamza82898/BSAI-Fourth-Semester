@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NASA Astronomy Picture of the Day</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: radial-gradient(ellipse at top left, #2b5876 0%, #4e4376 100%);
+            color: #e0e7ef;
+            font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .stars {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 60px auto 40px auto;
+            background: rgba(24, 28, 48, 0.97);
+            border-radius: 22px;
+            box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.37), 0 1.5px 0 #ffd700 inset;
+            padding: 48px 36px 36px 36px;
+            border: 2px solid #ffd700;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px);}
+            100% { transform: translateY(-10px);}
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.7rem;
+            letter-spacing: 2.5px;
+            margin-bottom: 14px;
+            color: #ffd700;
+            text-shadow: 0 2px 16px #000, 0 0px 40px #ffd70055;
+            font-family: 'Orbitron', 'Montserrat', Arial, sans-serif;
+        }
+        h2 {
+            text-align: center;
+            font-size: 1.6rem;
+            margin-top: 0;
+            color: #ffecb3;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 8px #000;
+        }
+        .date {
+            text-align: center;
+            color: #b2b2b2;
+            margin-bottom: 22px;
+            font-size: 1.08rem;
+            letter-spacing: 1px;
+        }
+        .apod-img, .apod-video {
+            display: block;
+            margin: 28px auto 18px auto;
+            max-width: 98%;
+            border-radius: 16px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.5), 0 0 0 4px #ffd70044;
+            border: 4px solid #ffd700;
+            background: #222;
+        }
+        .apod-video {
+            width: 100%;
+            height: 400px;
+        }
+        .explanation {
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            border-radius: 14px;
+            padding: 22px 24px;
+            font-size: 1.13rem;
+            line-height: 1.8;
+            color: #f5f5f5;
+            margin-top: 18px;
+            box-shadow: 0 2px 12px #0004;
+            border-left: 5px solid #ffd700;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #ffd700bb;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 8px #000;
+        }
+        /* Decorative shooting star */
+        .shooting-star {
+            position: absolute;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff 0%, #ffd700 100%);
+            opacity: 0.7;
+            top: 30px;
+            left: -100px;
+            animation: shooting 3s linear infinite;
+        }
+        @keyframes shooting {
+            0% { left: -100px; opacity: 0; }
+            10% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { left: 100vw; opacity: 0; }
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 18px 5px;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            h2 {
+                font-size: 1.05rem;
+            }
+            .apod-video {
+                height: 220px;
+            }
+        }
+    </style>
+    <!-- Google Fonts for Orbitron and Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="shooting-star"></div>
+    <div class="container">
+        <h1>NASA Astronomy Picture of the Day</h1>
+        {% if apod_data %}
+            <h2>{{ apod_data.title }}</h2>
+            <div class="date"><strong>Date:</strong> {{ apod_data.date }}</div>
+            {% if apod_data.media_type == "image" %}
+                <img class="apod-img" src="{{ apod_data.url }}" alt="APOD Image">
+            {% elif apod_data.media_type == "video" %}
+                <iframe class="apod-video" src="{{ apod_data.url }}" frameborder="0" allowfullscreen></iframe>
+            {% endif %}
+            <div class="explanation">{{ apod_data.explanation }}</div>
+        {% else %}
+            <p style="text-align:center;">No data available.</p>
+        {% endif %}
+        <div class="footer">
+            &copy; {{ 2025 }} NASA APOD | Made for AI Programming Lab
+        </div>
+    </div>
+    <script>
+        // Generate random stars for background
+        const stars = document.querySelector('.stars');
+        for(let i=0; i<80; i++) {
+            const star = document.createElement('div');
+            star.style.position = 'absolute';
+            star.style.width = `${Math.random()*2+1}px`;
+            star.style.height = star.style.width;
+            star.style.background = '#fff';
+            star.style.borderRadius = '50%';
+            star.style.top = `${Math.random()*100}vh`;
+            star.style.left = `${Math.random()*100}vw`;
+            star.style.opacity = Math.random()*0.7+0.3;
+            stars.appendChild(star);
+        }
+    </script>
+</body>
+</html>
