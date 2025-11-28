@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>University Admission Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="chat-container">
+    <h2>🎓 University Admission Chatbot</h2>
+
+    <div id="chat-window"></div>
+
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Ask about requirements, deadlines, programs..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
