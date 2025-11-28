@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>University Q&A Bot</title>
+    <link rel="stylesheet" href="static\style.css">
+</head>
+<body>
+<div class="box">
+    <h2>University Chatbot – Q&A Search</h2>
+    <input id="query" placeholder="Ask something... e.g. How do I apply for financial aid?">
+    <button onclick="search()">Search</button>
+
+    <div id="results"></div>
+</div>
+
+<script>
+async function search() {
+    const q = document.getElementById("query").value;
+    const res = await fetch("/search", {
+        method: "POST",
+        body: JSON.stringify({query: q}),
+        headers: {"Content-Type": "application/json"}
+    });
+    const data = await res.json();
+
+    const box = document.getElementById("results");
+    box.innerHTML = "";
+
+    data.forEach(r => {
+        box.innerHTML += `
+            <div class="result">
+                <div class="question">${r.question}</div>
+                <div class="answer">${r.answer}</div>
+                <div class="tag">Category: ${r.tags}</div>
+                <div class="score">Similarity: ${r.score.toFixed(3)}</div>
+            </div>
+        `;
+    });
+}
+</script>
+</body>
+</html>
