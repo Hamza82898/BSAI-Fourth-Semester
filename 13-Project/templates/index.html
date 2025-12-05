@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feedback Sentiment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <h1>Feedback Sentiment Analyzer</h1>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <form method="post" class="feedback-form">
+                <label for="feedbacks">Enter feedback (one per line):</label>
+                <textarea id="feedbacks" name="feedbacks" rows="6" placeholder="Type each feedback on a new line..."></textarea>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Analyze</button>
+                </div>
+            </form>
+        </section>
+
+        {% if results %}
+        <section class="results-section">
+            <h2>Results</h2>
+            <div class="cards">
+                {% for r in results %}
+                <article class="card {{ r.sentiment|lower }}">
+                    <div class="card-body">
+                        <div class="card-text">{{ r.text }}</div>
+                        <div class="card-meta">
+                            <span class="emoji">{{ r.emoji }}</span>
+                            <span class="sentiment">{{ r.sentiment }}</span>
+                            <span class="confidence">Confidence: {{ r.confidence }}</span>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if history %}
+        <section class="history-section">
+            <h2>Session History</h2>
+            <ul class="history-list">
+                {% for h in history %}
+                <li class="history-item {{ h.sentiment|lower }}">
+                    <span class="history-text">{{ h.text }}</span>
+                    <span class="history-meta">{{ h.emoji }} • {{ h.sentiment }} • {{ h.confidence }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+    </main>
+    <form action="/delete_history" method="get">
+    <button class="delete-btn" type="submit">Delete Session History</button>
+    </form>
+
+
+    <footer class="site-footer">
+        <small>Powered by NLTK SentimentIntensityAnalyzer</small>
+    </footer>
+</body>
+</html>
